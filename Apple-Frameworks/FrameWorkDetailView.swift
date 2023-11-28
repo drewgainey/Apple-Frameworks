@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct FrameWorkDetailView: View {
-    let framework : Framework
+    
+    var framework : Framework
+    @Binding var isShowingDetailView: Bool
+    @State private var isShowingSafariView = false
+    
     var body: some View {
         VStack {
             HStack {
                 Spacer()
-                Button {} label: {
+                Button {
+                    isShowingDetailView = false
+                } label: {
                     Image(systemName: "xmark")
                         .foregroundColor(Color(.label))
                         .imageScale(.large)
@@ -28,17 +34,20 @@ struct FrameWorkDetailView: View {
                 .padding()
             Spacer()
             Button {
-                
+                isShowingSafariView = true
             } label: {
                 AFButton(title: "Learn More")
             }
         }
+        .fullScreenCover(isPresented: $isShowingSafariView, content: {
+            SafariView(url: URL(string: framework.urlString)!)
+        })
     }
 }
 
 struct FrameWorkDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        FrameWorkDetailView(framework: MockData.sampleFramework)
+        FrameWorkDetailView(framework: MockData.sampleFramework, isShowingDetailView: .constant(false))
             .preferredColorScheme(.dark)
     }
 }
